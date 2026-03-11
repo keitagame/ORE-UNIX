@@ -1,5 +1,7 @@
 /* kernel.c */
 #include <stdint.h>
+#include "memory.h"
+#include "multiboot.h"
 
 /* ===========================
    VGA TEXT MODE
@@ -82,7 +84,12 @@ static void tty_print(const char* s) {
    ENTRY POINT
    =========================== */
 
-void kmain(void) {
+void kmain(uint32_t magic, uint32_t addr) {
+    multiboot_info_t* mb = (multiboot_info_t*)addr;
+
+    memory_init(mb->mem_lower, mb->mem_upper);
+
+    void* p = alloc_page();
     uint8_t color = 0x0F; // 黒地に白
 
     // 画面クリア

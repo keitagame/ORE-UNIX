@@ -10,7 +10,7 @@ LDFLAGS = -m elf_i386 -T linker.ld -nostdlib
 
 all: $(ISO)
 
-$(TARGET): multiboot_header.o kernel.o
+$(TARGET): multiboot_header.o kernel.o memory.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 multiboot_header.o: multiboot_header.s
@@ -18,7 +18,8 @@ multiboot_header.o: multiboot_header.s
 
 kernel.o: kernel.c
 	$(CC) $(CFLAGS) -c -o $@ $<
-
+memory.o: memory.c memory.h
+	$(CC) $(CFLAGS) -c -o $@ memory.c
 $(ISO): $(TARGET) grub.cfg
 	mkdir -p iso/boot/grub
 	cp $(TARGET) iso/boot/kernel.elf
