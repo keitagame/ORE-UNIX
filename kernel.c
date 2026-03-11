@@ -2,6 +2,10 @@
 #include <stdint.h>
 #include "memory.h"
 #include "multiboot.h"
+#include "pic.h"
+#include "idt.h"
+
+
 
 /* ===========================
    VGA TEXT MODE
@@ -84,15 +88,16 @@ static void tty_print(const char* s) {
    ENTRY POINT
    =========================== */
 
+void irq0_handler(void) {
+    tty_print("IRQ0\n");
+    pic_eoi(0);
+}
 void kmain(uint32_t magic, uint32_t addr) {
     multiboot_info_t* mb = (multiboot_info_t*)addr;
 
     memory_init(mb->mem_lower, mb->mem_upper);
 
-    void* p = alloc_page();
-    uint8_t color = 0x0F; // 黒地に白
-
-    // 画面クリア
+    uint8_t color = 0x0F;
     for (int y = 0; y < VGA_ROWS; y++) {
         for (int x = 0; x < VGA_COLS; x++) {
             VGA_BUFFER[y * VGA_COLS + x] = vga_entry(' ', color);
@@ -101,8 +106,16 @@ void kmain(uint32_t magic, uint32_t addr) {
 
     serial_init();
 
-    tty_print("Hello from kernel!\n");
-    
+    idt_init();
+    pic_init();
 
-    // ここから先は multiboot_header.s の hang に戻って停止
+    tty_print("before int32\n");
+
+    __asm__ volatile ("int $32");   // ★ ここでソフトウェア割り込み
+
+    tty_print("after int32\n");
+
+    __asm__ volatile ("sti");       // これは一旦コメントアウトでもいい
+
+    while (1) { }
 }
