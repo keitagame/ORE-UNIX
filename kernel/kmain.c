@@ -1,9 +1,9 @@
 /* kernel/kmain.c – kernel entry point */
-#include <kernel/kernel.h>
-#include <kernel/mm.h>
-#include <kernel/process.h>
-#include <kernel/vfs.h>
-#include <arch/x86/arch.h>
+#include "kernel.h"
+#include "mm.h"
+#include "process.h"
+#include "vfs.h"
+#include "../include/arch.h"
 
 /* ─── Multiboot2 structures ───────────────────────────────────────────────── */
 #define MB2_BOOTLOADER_MAGIC 0x36D76289U

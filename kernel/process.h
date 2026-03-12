@@ -1,8 +1,8 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
-#include <kernel/kernel.h>
-#include <kernel/mm.h>
+#include "kernel.h"
+#include "mm.h"
 
 /* ─── Process states ─────────────────────────────────────────────────────── */
 #define TASK_RUNNING    0   /* on runqueue or currently executing */

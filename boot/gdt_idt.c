@@ -1,11 +1,12 @@
 /* boot/gdt.c – GDT, IDT, TSS initialization */
 #include "../include/arch.h"
+#include "../kernel/process.h"
 struct task_struct;
 /* page fault handler (somewhere in mm/ or so) */
 void page_fault_handler(u32 addr, u32 err);
 
 /* signal / kill (somewhere in kernel/) */
-int sys_kill(int pid, int sig);
+//int sys_kill(int pid, int sig);
 
 /* temporary, until you have proper signal.h */
 #define SIGSEGV 11
